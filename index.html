@@ -8,7 +8,7 @@
             @font-face {font-family: ArialBlack;src: local('Arial Black');}
             body {background: #fede57;margin:0;padding:0;} .credits {position:absolute;bottom:5px;right:10px;font:8pt Arial, sans-serif;vertical-align:middle;}
         </style>
-        <script>
+        <!--<script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -16,7 +16,7 @@
 
             ga('create', 'UA-50625856-1', 'pyshechka.github.io');
             ga('send', 'pageview');
-        </script>
+        </script>-->
         <!--<script type="text/javascript" src="http://vk.com/js/api/share.js?90" charset="windows-1251"></script>-->
         <script type="text/javascript" src="scripts/Box2dWeb-2.1.a.3.min.js"></script>
         <script type="text/javascript">
@@ -39,7 +39,7 @@
                 var wasTouching = false;
                 var rejump = 0;
                 var state = new CanvasState();
-                const PIXELS_IN_METER = 30;
+                var PIXELS_IN_METER = 30;
                 const GENERATING_BUILDINGS = 15;
                 var score = 0;
                 var buildings;
@@ -90,9 +90,13 @@
                     return Math.floor(Math.random() * (max - min + 1)) + min;
                 }
 
-                window.onresize = function() {
+                var resizeCanvas = window.onresize = function() {
                     canvas.width = document.body.clientWidth;
+                    canvas.height = document.body.clientHeight;
+                    PIXELS_IN_METER = canvas.height / (400/30);
                 };
+
+                resizeCanvas();
 
                 var b2Vec2 = Box2D.Common.Math.b2Vec2,
                     b2BodyDef = Box2D.Dynamics.b2BodyDef,
@@ -107,7 +111,8 @@
                     b2Contact = Box2D.Dynamics.Contacts.b2Contact,
                     b2ContactListener = Box2D.Dynamics.b2ContactListener;
 
-                canvas.width = document.body.clientWidth;
+                canvas.width  = document.body.clientWidth;
+                canvas.height = document.body.clientHeight;
                 CanvasState.states[state.state].init();
                 window.requestAnimFrame(updateCanvas);
 
@@ -202,7 +207,7 @@
 
                 function jump()
                 {
-                    if (rejump < 3)
+                    if (rejump < 2)
                     {
                         if (peka.state == Peka.STATE_YOBA)
                         {
@@ -227,6 +232,8 @@
 
                 function generateTwoBuildings() {
 
+                   // var distance =
+
                     var isDouble = Math.random();
 
                     var bodyDef = new b2BodyDef;
@@ -243,7 +250,7 @@
                     buildings[i] = new Array();
                     var height = getRandomInt(1, 3);
 
-                    bodyDef.position.x = ((i + 3) * 210) / PIXELS_IN_METER;
+                    bodyDef.position.x = ((i + 3) * 7);
 
                     bodyDef.position.y = 12;
 
@@ -329,7 +336,7 @@
                         text = "OCHE MALI REZULTAT";
                     }
                     img.width = bounds.w, img.height = bounds.h;
-                    ctx.drawImage(img, (canvas.width-img.width)/2, (canvas.height-img.height-110)/2, bounds.w, bounds.h);
+                    ctx.drawImage(img, (canvas.width-img.width)/2, 140-img.height/2, bounds.w, bounds.h);
 
                     ctx.fillText(text + ": " + score, canvas.width / 2, 270);
                     ctx.fillText("REKORD: " + highscore, canvas.width / 2, 315);
@@ -387,10 +394,11 @@
                     var imageCoords = {x: imageCenter.x - radius * PIXELS_IN_METER, y: imageCenter.y - radius * PIXELS_IN_METER};
 
                     var bg = document.getElementById("peka-bg");
+                    bg.width = 550 * PIXELS_IN_METER / 30;
 
-                    for (i = -1; i < Math.ceil(canvas.width / bg.width); i++)
+                    for (i = -2; i < Math.ceil(canvas.width / bg.width); i++)
                     {
-                        ctx.drawImage(bg, bg.width * i + ((pekaPosition.x * PIXELS_IN_METER) % bg.width), 20);
+                        ctx.drawImage(bg, bg.width * i + ((pekaPosition.x * PIXELS_IN_METER) % bg.width), 20, 550 * PIXELS_IN_METER / 30, 367 * PIXELS_IN_METER / 30);
                     }
 
                     var img;
@@ -479,9 +487,9 @@
             <canvas id="game" width="900" height="400"></canvas>
         </div>
         <img src="logo.png" id="logo" style="display: none" />
-        <img src="peka.png" id="peka" style="display: none" />
-        <img src="peka_butthurt.png" id="peka-butthurt" style="display: none" />
-        <img src="peka_bg.png" id="peka-bg" style="display: none" />
+        <img src="peka-highres.png" id="peka" style="display: none" />
+        <img src="peka_butthurt_highres.png" id="peka-butthurt" style="display: none" />
+        <img src="peka_bg.png" id="peka-bg" style="display: none" width="1000" />
         <img src="peka_oche_bolsho.png" id="peka-oche-bolsho" style="display: none" />
         <img src="peka_bolsho.png" id="peka-bolsho" style="display: none" />
         <img src="peka_mali.png" id="peka-mali" style="display: none" />
